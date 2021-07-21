@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import AddTask from './Components/AddTask/AddTask';
-import Button from './Components/Button/Button';
-//import DarkMode from './Components/DarkMode/DarkMode';
+import Footer from './Components/Footer/Footer';
 import Header from './Components/Header/Header';
-
 import Tasks from './Components/Tasks/Tasks';
 
 function App() {
   const [showAddTask, setShowAddTask] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [date, setDate] = useState(new Date());
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -29,6 +28,25 @@ function App() {
       reminder: false,
     },
   ]);
+  /*
+  const dt = new Date();
+  console.log(dt.getDay());
+
+  const day = dt.getDate();
+  const month = dt.getMonth();
+  const year = dt.getFullYear();
+  console.log(day, month, year);*/
+
+  const currentDate = date.toDateString();
+  const dateTime = date.toLocaleTimeString();
+
+  // Date Time
+  useEffect(() => {
+    const timer = setInterval(() => setDate(new Date()), 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   useEffect(() => {
     //specify a localStorage item to check whether the user is currently in dark mode when the page loads
@@ -70,20 +88,23 @@ function App() {
   return (
     <React.Fragment>
       <div className={darkMode ? 'dark-mode' : 'light-mode'}>
-        <div className="container1">
-          <span style={{ color: darkMode ? 'grey' : 'yellow' }}>☀︎</span>
-          <div className="switch-checkbox">
-            <label className="switch">
-              <input type="checkbox" onChange={() => setDarkMode(!darkMode)} />
-              <span className="slider round"> </span>
-            </label>
+        <nav>
+          <div className="nav-center">
+            <h1>Cool its {darkMode ? 'Dark' : 'Light'} Mode </h1>
+            <div className="container1">
+              <span style={{ color: darkMode ? 'grey' : 'yellow' }}>☀︎</span>
+              <div className="switch-checkbox">
+                <label className="switch">
+                  <input type="checkbox" onChange={() => setDarkMode(!darkMode)} />
+                  <span className="slider round"> </span>
+                </label>
+              </div>
+              <span style={{ color: darkMode ? '#c96dfd' : 'grey' }}>☽</span>
+            </div>
           </div>
-          <span style={{ color: darkMode ? '#c96dfd' : 'grey' }}>☽</span>
-        </div>
-        <div>
-          <h1>Cool its {darkMode ? 'Dark' : 'Light'} Mode </h1>
-        </div>
-
+        </nav>
+        <br />
+        <h1>{`Today it is ${currentDate}`}</h1>
         <div className="container">
           <Header onAdd={() => setShowAddTask(!showAddTask)} showAdd={showAddTask} />
           {showAddTask && <AddTask onAdd={addTask} />}
@@ -93,6 +114,9 @@ function App() {
             'No Tasks To Show'
           )}
         </div>
+        <br />
+        <h1> {`Time :  ${dateTime}`}</h1>
+        <Footer />
       </div>
     </React.Fragment>
   );
